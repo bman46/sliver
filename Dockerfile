@@ -1,6 +1,6 @@
 # STAGE: base
 ## Compiles Sliver for use
-FROM golang:1.21.3 as base
+FROM golang:1.21.4 as base
 
 #### Base packages
 RUN apt-get update --fix-missing && apt-get -y install \
@@ -38,7 +38,8 @@ RUN apt-get update --fix-missing && apt-get -y install \
 RUN curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall \
     && chmod 755 msfinstall \
     && ./msfinstall
-RUN mkdir -p ~/.msf4/ && touch ~/.msf4/initial_setup_complete \
+RUN mkdir -p ~/.msf4/ \
+    && touch ~/.msf4/initial_setup_complete \
     &&  su -l sliver -c 'mkdir -p ~/.msf4/ && touch ~/.msf4/initial_setup_complete'
 
 RUN /opt/sliver-server unpack --force 
@@ -48,7 +49,7 @@ RUN /go/src/github.com/bishopfox/sliver/go-tests.sh
 
 # STAGE: production
 ## Final dockerized form of Sliver
-FROM golang:1.21.3 as production
+FROM golang:1.21.4 as production
 
 ### Copy compiled binary
 COPY --from=base /opt/sliver-server  /opt/sliver-server
