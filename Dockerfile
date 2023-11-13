@@ -2,10 +2,6 @@
 ## Compiles Sliver for use
 FROM golang:1.21.3 as base
 
-ENV PROTOC_VER 21.12
-ENV PROTOC_GEN_GO_VER v1.27.1
-ENV GRPC_GO v1.2.0
-
 #### Base packages
 RUN apt-get update --fix-missing && apt-get -y install \
     git build-essential zlib1g zlib1g-dev wget zip unzip
@@ -23,6 +19,7 @@ RUN cp -vv sliver-server /opt/sliver-server
 
 # STAGE: test
 ## Run unit tests against the compiled instance
+## Use `--target test` in the docker build command to run this stage
 FROM base as test
 
 ### Install testing packages
