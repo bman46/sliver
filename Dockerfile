@@ -8,16 +8,7 @@ ENV GRPC_GO v1.2.0
 
 #### Base packages
 RUN apt-get update --fix-missing && apt-get -y install \
-    git build-essential zlib1g zlib1g-dev \
-    libxml2 libxml2-dev libxslt-dev locate curl \
-    libreadline6-dev libcurl4-openssl-dev git-core \
-    libssl-dev libyaml-dev openssl autoconf libtool \
-    ncurses-dev bison curl wget xsel postgresql \
-    postgresql-contrib postgresql-client libpq-dev \
-    libapr1 libaprutil1 libsvn1 \
-    libpcap-dev libsqlite3-dev libgmp3-dev \
-    zip unzip mingw-w64 binutils-mingw-w64 g++-mingw-w64 \
-    nasm gcc-multilib
+    git build-essential zlib1g zlib1g-dev wget zip unzip
 
 ### Add sliver user
 RUN groupadd -g 999 sliver && useradd -r -u 999 -g sliver sliver
@@ -33,6 +24,18 @@ RUN cp -vv sliver-server /opt/sliver-server
 # STAGE: test
 ## Run unit tests against the compiled instance
 FROM base as test
+
+### Install testing packages
+RUN apt-get update --fix-missing && apt-get -y install \
+    libxml2 libxml2-dev libxslt-dev locate curl \
+    libreadline6-dev libcurl4-openssl-dev git-core \
+    libssl-dev libyaml-dev openssl autoconf libtool \
+    ncurses-dev bison curl xsel postgresql \
+    postgresql-contrib postgresql-client libpq-dev \
+    libapr1 libaprutil1 libsvn1 \
+    libpcap-dev libsqlite3-dev libgmp3-dev \
+    mingw-w64 binutils-mingw-w64 g++-mingw-w64 \
+    nasm gcc-multilib
 
 ### Install MSF for testing
 RUN curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall \
